@@ -9,7 +9,8 @@ const laporanPenjualanSchema = new Schema({
   totalPendapatan: {
     type: Number,
     required: true
-  }
+  },
+  pesanan: [{ type: Schema.Types.ObjectId, ref: 'Pesanan' }] // Reference to Pesanan model
 });
 
 const LaporanPenjualan = mongoose.model("LaporanPenjualan", laporanPenjualanSchema);

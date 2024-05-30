@@ -1,11 +1,16 @@
-const Pesanan = require('../models/pesananmodel');
 const Produk = require('../models/produkmodel');
+const {Pesanan, StatusPesanan } = require('../models/pesananmodel');
 
 const pesananController = {
   // Create a new Pesanan
   createPesanan: async (req, res) => {
     try {
       const { id_pesanan, tanggal_pemesanan, status_pesanan, jumlah_barang, total_harga, nama_pembeli, produk } = req.body;
+
+      // Check if status_pesanan is valid
+      if (!Object.values(StatusPesanan).includes(status_pesanan)) {
+        return res.status(400).json({ error: 'Invalid status_pesanan' });
+      }
   
       // Check if the referenced produk exists
       const existingProduks = await Produk.find({ id_produk: { $in: produk } });
@@ -30,7 +35,6 @@ const pesananController = {
       res.status(500).json({ error: 'Server error' });
     }
   },
-  
   
   // Delete a Pesanan by id_pesanan
   deletePesanan: async (req, res) => {
@@ -101,6 +105,25 @@ const pesananController = {
     } catch (error) {
       console.error("Error fetching Pesanan by id_pesanan:", error);
       res.status(500).json({ error: "Failed to fetch Pesanan." });
+    }
+  },
+
+  getPesananByStatus: async (req, res) => {
+    try {
+      const { status } = req.query;
+
+      // Check if the status is valid
+      if (!Object.values(StatusPesanan).includes(status)) {
+        return res.status(400).json({ error: 'Invalid status' });
+      }
+
+      // Find Pesanan by status
+      const pesananByStatus = await Pesanan.find({ status_pesanan: status });
+
+      res.status(200).json(pesananByStatus);
+    } catch (error) {
+      console.error("Error fetching Pesanan by status:", error);
+      res.status(500).json({ error: "Failed to fetch Pesanan by status." });
     }
   }
 };

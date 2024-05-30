@@ -21,34 +21,33 @@ const registerUser = require('./controller/usercontroller');
 
 const router = express.Router();
 
-router.post('/register',registerUser.registerUser);
-router.post('/login',login.login);
-router.post('/pesanan', pesananController.createPesanan);
-router.delete('/pesanan/:id', pesananController.deletePesanan);
-router.get('/pesanan', pesananController.getAllPesanan);
-router.get('/pesanan/filter', pesananController.getPesananByDate);
-router.get('/pesanan/:id', pesananController.getPesananById)
-router.post('/produk', produkController.addProduk);
-router.delete('/produk/:id', produkController.deleteProduk);
-router.get('/produk', produkController.getAllProduk);
-router.get('/produk/:id',produkController.getProdukById);
-router.get('/bahan',bahanBakuController.getBahanBaku);
-router.get('/bahan/:id',bahanBakuController.getBahanBakuById);
-router.get('/bahanhabis',bahanBakuController.getBahanBakuWithFalseStokReady);
-router.post('/bahan',bahanBakuController.createBahanBaku);
-router.put('/bahan/update/:id',bahanBakuController.updateStokBahanBaku);
-router.get('/laporan',isAuthenticated,isOwner,laporanPenjualanController.getTotalPendapatan);
-router.get('/laporan/range',isAuthenticated,isOwner,laporanPenjualanController.getTotalPendapatanByDate);
-router.get('/laporan/hari',isAuthenticated,isOwner,laporanPenjualanController.getPendapatanOnDate);
-router.get('/biayaoperasional', biayaOperasionalController.getAllBiayaOperasional);
-router.get('/biayaoperasional/hari/:date', biayaOperasionalController.getBiayaOperasionalOnDate);
-router.get('/biayaoperasional/range', biayaOperasionalController.getBiayaOperasionalByDateRange);
-router.get('/biayaoperasional/sum/hari/:date', biayaOperasionalController.getSumBiayaOperasionalOnDate);
-router.get('/biayaoperasional/sum/range', biayaOperasionalController.getSumBiayaOperasionalByDateRange);
-router.post('/biayaoperasional', biayaOperasionalController.createBiayaOperasional);
-router.delete('/biayaoperasional/:id', biayaOperasionalController.deleteBiayaOperasionalById);
-
-
+router.post('/register',registerUser.registerUser); //register
+router.post('/login',login.login); //login
+router.post('/pesanan', pesananController.createPesanan); //buat pesanan 
+router.delete('/pesanan/:id', pesananController.deletePesanan); //hapus pesanan
+router.get('/pesanan', pesananController.getAllPesanan); //get pesanan
+router.get('/pesanan/filter', pesananController.getPesananByDate); //get pesanan filter tanggal
+router.get('/pesanan/:id', pesananController.getPesananById); //get pesanan by id
+router.get('/pesanan-status',pesananController.getPesananByStatus); //get status produksi/pesanan
+router.post('/produk', produkController.addProduk); //buat produk
+router.delete('/produk/:id', produkController.deleteProduk); //hapus produk
+router.get('/produk', produkController.getAllProduk); //get produk
+router.get('/produk/:id',produkController.getProdukById); //get produk by id
+router.get('/bahan',bahanBakuController.getBahanBaku); //get bahanbaku
+router.get('/bahan/:id',bahanBakuController.getBahanBakuById); //get bahanbaku by id
+router.get('/bahanhabis',bahanBakuController.getBahanBakuWithFalseStokReady); //get bahan baku yang habis
+router.post('/bahan',bahanBakuController.createBahanBaku); //buat bahanbaku
+router.put('/bahan/update/:id',bahanBakuController.updateStokBahanBaku); //update stok bahan baku
+router.get('/laporan',isAuthenticated,isOwner,laporanPenjualanController.getTotalPendapatan); //menampilkan total pendapatan
+router.get('/laporan/date-range',isAuthenticated,isOwner,laporanPenjualanController.getLaporanByDateRange); //membuat laporan dengan range tanggal a - b
+router.get('/laporan/date',isAuthenticated,isOwner,laporanPenjualanController.getLaporanByDate); // membuat laporan di tanggal a
+router.get('/biayaoperasional', biayaOperasionalController.getAllBiayaOperasional); //get biaya operasional
+router.get('/biayaoperasional/hari/:date', biayaOperasionalController.getBiayaOperasionalOnDate); //get biaya operasional pada tanggal a
+router.get('/biayaoperasional/range', biayaOperasionalController.getBiayaOperasionalByDateRange); //get biaya operasional pada range tanggal a - b
+router.get('/biayaoperasional/sum/hari/:date', biayaOperasionalController.getSumBiayaOperasionalOnDate); //get total biaya operasional pada tanggal a
+router.get('/biayaoperasional/sum/range', biayaOperasionalController.getSumBiayaOperasionalByDateRange); //get total biaya operasional pada range tanggal a - b
+router.post('/biayaoperasional', biayaOperasionalController.createBiayaOperasional); //buat biaya operasional
+router.delete('/biayaoperasional/:id', biayaOperasionalController.deleteBiayaOperasionalById); // hapus biaya operasional
 
 // Mount the router under the /v1 prefix
 app.use('/v1', router);
