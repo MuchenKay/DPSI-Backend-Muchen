@@ -1,30 +1,37 @@
 const Pesanan = require('../models/pesananmodel');
+const Produk = require('../models/produkmodel');
 
 const pesananController = {
   // Create a new Pesanan
   createPesanan: async (req, res) => {
     try {
-      const { id_pesanan, tanggal_pemesanan, status_pesanan, jumlah_barang, total_harga, nama_pembeli } = req.body;
-
-      // Check if Pesanan with the given id_pesanan already exists
-      const existingPesanan = await Pesanan.findOne({ id_pesanan });
-      if (existingPesanan) {
-        return res.status(400).json({ error: "Pesanan with this id_pesanan already exists." });
+      const { id_pesanan, tanggal_pemesanan, status_pesanan, jumlah_barang, total_harga, nama_pembeli, produk } = req.body;
+  
+      // Check if the referenced produk exists
+      const existingProduks = await Produk.find({ id_produk: { $in: produk } });
+      if (existingProduks.length !== produk.length) {
+        return res.status(400).json({ error: 'One or more Produk not found' });
       }
-
-      // Create a new Pesanan instance
-      const newPesanan = new Pesanan({ id_pesanan, tanggal_pemesanan, status_pesanan, jumlah_barang, total_harga, nama_pembeli });
-
-      // Save the new Pesanan to the database
+  
+      const newPesanan = new Pesanan({
+        id_pesanan,
+        tanggal_pemesanan,
+        status_pesanan,
+        jumlah_barang,
+        total_harga,
+        nama_pembeli,
+        produk: existingProduks.map(prod => prod.id_produk), // Reference to the id_produk of Produk
+      });
+  
       await newPesanan.save();
-
-      res.status(201).json({ message: "Pesanan created successfully.", data: newPesanan });
+      res.json({ message: 'Pesanan created successfully', pesanan: newPesanan });
     } catch (error) {
-      console.error("Error creating Pesanan:", error);
-      res.status(500).json({ error: "Failed to create Pesanan." });
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
     }
   },
-
+  
+  
   // Delete a Pesanan by id_pesanan
   deletePesanan: async (req, res) => {
     try {
